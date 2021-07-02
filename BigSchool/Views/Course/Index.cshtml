@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh Sách Khóa Học</h2>
+@model IEnumerable<BigSchool.Models.Course>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Tên Giảng Viên</th>
+            <th scope="col">Khóa Học</th>
+            <th scope="col">Địa Điểm</th>
+            <th scope="col">Thời Gian Diễn Ra</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+        }
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.name</td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.Place</td>
+                    <td>@item.DateTime.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>
+

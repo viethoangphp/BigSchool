@@ -7,7 +7,12 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Xin Chào " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <a href="#" class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Xin Chào  @User.Identity.GetUserName()</a>
+            <div class="dropdown-menu text-center" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" style="display:inherit">Khóa Học Sắp Tới</a>
+                <a class="dropdown-item" href="#" style="display:inherit">Giảng Viên Yêu Thích</a>
+                <a class="dropdown-item" href="#" style="display:inherit">Khóa Học Của Tôi</a>
+            </div>
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Đăng Xuất</a></li>
     </ul>

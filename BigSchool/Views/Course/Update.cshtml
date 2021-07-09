@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model BigSchool.Models.Course
+<h2>Thông Tin Khóa Học</h2>
+<form method="post" action="/Course/Update">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" value="@Model.Id"/>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Địa Điểm</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Địa Điểm" name="Place" value="@Model.Place">
+        @Html.ValidationMessageFor(m => m.Place)
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Thời Gian Diễn Ra</label>
+        <input type="date" class="form-control" id="exampleInputPassword1" name="DateTime">
+        @Html.ValidationMessageFor(m => m.DateTime)
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Loại Khóa Học</label>
+        <select class="form-control" id="exampleFormControlSelect1" name="CategoryId">
+            @foreach (var item in Model.ListCategory)
+            {
+                if (item.Id == Model.CategoryId)
+                {
+                    <option value="@item.Id" selected>@item.Name</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section scripts{
+    <script>
+        $("#exampleInputPassword1").val("@String.Format("{0:yyyy-MM-dd}", Model.DateTime)")
+    </script>    
+}

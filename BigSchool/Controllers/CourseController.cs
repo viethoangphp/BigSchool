@@ -50,5 +50,50 @@ namespace BigSchool.Controllers
             course.ListCategory = db.Categories.ToList();
             return View("Create", course);
         }
+        [HttpPost]
+        public JsonResult Attending(int id)
+        {
+            DBContext db = new DBContext();
+            var userID = User.Identity.GetUserId();
+            if(db.Attendances.Where(m=>m.UserId == userID && m.CourseId == id).FirstOrDefault() == null)
+            {
+                Attendance attendance = new Attendance();
+                attendance.CourseId = id;
+                attendance.UserId = userID;
+                db.Attendances.Add(attendance);
+                db.SaveChanges();
+                return Json("true", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                db.Attendances.Remove(db.Attendances.Where(m => m.UserId == userID && m.CourseId == id).FirstOrDefault());
+                db.SaveChanges();
+                return Json("false", JsonRequestBehavior.AllowGet);
+            }
+           
+        }
+        public ActionResult Update(int id)
+        {
+            var course = new DBContext().Courses.Find(id);
+            course.ListCategory = new DBContext().Categories.ToList();
+            return View(course);
+        }
+        [HttpPost]
+        public ActionResult Update(Course model)
+        {
+            DBContext db = new DBContext();
+            var course = db.Courses.Find(model.Id);
+            ModelState.Remove("LectureId");
+            if (ModelState.IsValid)
+            {
+                course.Place = model.Place;
+                course.DateTime = model.DateTime;
+                course.CategoryId = model.CategoryId;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Course");
+            }
+            course.ListCategory = new DBContext().Categories.ToList();
+            return View(course);
+        }
     }
 }

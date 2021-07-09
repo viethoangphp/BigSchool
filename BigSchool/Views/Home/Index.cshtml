@@ -1,4 +1,66 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h2>Danh Sách Khóa Học</h2>
+@model IEnumerable<BigSchool.Models.Course>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Tên Giảng Viên</th>
+            <th scope="col">Khóa Học</th>
+            <th scope="col">Địa Điểm</th>
+            <th scope="col">Thời Gian Diễn Ra</th>
+            <th scope="col">Đăng Ký Ngay</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 0;
+        }
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                count++;
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.name</td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.Place</td>
+                    <td>@item.DateTime.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <button class="btn btn-warning " data-id="@item.Id">Đăng Ký Ngay</button>
+                    </td>
+                </tr>
+            }
 
+        }
+    </tbody>
+</table>
+@section scripts{
+  <script>
+      $(document).ready(function () {
+          $(".btn").on("click", function () {
+              var id = $(this).data("id");
+              var btn = $(this);
+              $.ajax({
+                  url: "/Course/Attending",
+                  method: "POST",
+                  data: {id:id},
+                  dataType: "json",
+                  success: function (data) {
+                      if (data == "true") {
+                          alert("Đã Đăng Ký");
+                          btn.removeClass("btn-warning").addClass("btn-success").text("Đã Đăng Ký");
+                      } else {
+                          alert("Đã Hủy Đăng Ký");
+                          btn.removeClass("btn-success").addClass("btn-warning").text("Đăng Ký Ngay");
+                      }
+                  }
+              });
+          })
+      })
+   </script> 
+}

@@ -14,6 +14,7 @@
             <th scope="col">Khóa Học</th>
             <th scope="col">Địa Điểm</th>
             <th scope="col">Thời Gian Diễn Ra</th>
+            <th scope="col">Tác Vụ</th>
         </tr>
     </thead>
     <tbody>
@@ -25,13 +26,17 @@
             foreach (var item in Model)
             {
                 count++;
-                <tr>
-                    <th scope="row">@count</th>
-                    <td>@item.name</td>
-                    <td>@item.Category.Name</td>
-                    <td>@item.Place</td>
-                    <td>@item.DateTime.ToString("dd/MM/yyyy")</td>
-                </tr>
+        <tr>
+            <th scope="row">@count</th>
+            <td>@item.name</td>
+            <td>@item.Category.Name</td>
+            <td>@item.Place</td>
+            <td>@item.DateTime.ToString("dd/MM/yyyy")</td>
+            <td>
+                <a href="/Course/Update/@item.Id">Sửa</a>||
+                <a href="/Course/Delete/@item.Id">Xóa</a>
+            </td>
+        </tr>
             }
 
         }

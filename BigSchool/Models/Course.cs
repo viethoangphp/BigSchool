@@ -31,6 +31,7 @@ namespace BigSchool.Models
         public string name;
 
         public int CategoryId { get; set; }
+        public int Status { set; get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance> Attendances { get; set; }

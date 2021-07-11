@@ -16,7 +16,7 @@ namespace BigSchool.Controllers
         public ActionResult Index()
         {
             DBContext db = new DBContext();
-            List<Course> list = db.Courses.ToList();
+            List<Course> list = db.Courses.Where(m=>m.Status ==1).ToList();
             foreach(var item in list)
             {
                 ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(item.LectureId);
@@ -94,6 +94,18 @@ namespace BigSchool.Controllers
             }
             course.ListCategory = new DBContext().Categories.ToList();
             return View(course);
+        }
+        public ActionResult Delete(int id)
+        {
+            DBContext db = new DBContext();
+            var course = db.Courses.Find(id);
+            if(course != null)
+            {
+                course.Status = 0;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Course");
+            }
+            return HttpNotFound();
         }
     }
 }

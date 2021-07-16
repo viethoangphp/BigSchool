@@ -41,11 +41,11 @@ namespace BigSchool.Controllers
             {
                 ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
                 model.LectureId = user.Id;
+                model.Status = 1;
                 db.Courses.Add(model);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Course");
             }
-         
             Course course = new Course();
             course.ListCategory = db.Categories.ToList();
             return View("Create", course);
@@ -107,5 +107,27 @@ namespace BigSchool.Controllers
             }
             return HttpNotFound();
         }
+        public JsonResult Follow(string followee)
+        {
+            DBContext db = new DBContext();
+            var follower = User.Identity.GetUserId();
+            if(new CheckAttendace().isFollow(follower,followee) == true)
+            {
+                Following item = new Following();
+                item.FolloweeId = followee;
+                item.FollowerId = follower;
+                db.Followings.Add(item);
+                db.SaveChanges();
+                return Json("true", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                Following item = db.Followings.Where(m => m.FolloweeId == followee && m.FollowerId == follower).FirstOrDefault();
+                db.Followings.Remove(item);
+                db.SaveChanges();
+                return Json("false", JsonRequestBehavior.AllowGet);
+            }
+        }
+       
     }
 }

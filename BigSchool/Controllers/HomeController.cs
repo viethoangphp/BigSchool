@@ -15,7 +15,7 @@ namespace BigSchool.Controllers
         public ActionResult Index()
         {
             DBContext db = new DBContext();
-            List<Course> list = db.Courses.ToList();
+            List<Course> list = db.Courses.Where(m=>m.Status ==1).ToList();
             foreach (var item in list)
             {
                 ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(item.LectureId);

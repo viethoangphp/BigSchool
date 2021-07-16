@@ -13,27 +13,54 @@
             <th scope="col">Địa Điểm</th>
             <th scope="col">Thời Gian Diễn Ra</th>
             <th scope="col">Đăng Ký Ngay</th>
+            <th scope="col">Theo Dõi Giảng Viên</th>
         </tr>
     </thead>
     <tbody>
+        @using BigSchool.Models
+        @using Microsoft.AspNet.Identity
         @{
             int count = 0;
+            var check = new CheckAttendace();
+            var userId = User.Identity.GetUserId();
         }
         @if (Model != null)
         {
             foreach (var item in Model)
             {
                 count++;
-                <tr>
-                    <th scope="row">@count</th>
-                    <td>@item.name</td>
-                    <td>@item.Category.Name</td>
-                    <td>@item.Place</td>
-                    <td>@item.DateTime.ToString("dd/MM/yyyy")</td>
-                    <td>
-                        <button class="btn btn-warning " data-id="@item.Id">Đăng Ký Ngay</button>
-                    </td>
-                </tr>
+        <tr>
+            <th scope="row">@count</th>
+            <td>@item.name</td>
+            <td>@item.Category.Name</td>
+            <td>@item.Place</td>
+            <td>@item.DateTime.ToString("dd/MM/yyyy")</td>
+            @if (check.isAttendace(userId, item.Id))
+            {
+                <td>
+                    <button class="btn btn-warning btn-attendace " data-id="@item.Id">Đăng Ký Ngay</button>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <button class="btn btn-success  btn-attendace " data-id="@item.Id">Hủy Đăng Ký</button>
+                </td>
+            }
+            @if (check.isFollow(userId, item.LectureId))
+            {
+                <td>
+                    <button class="btn btn-warning btn-follow" data-id="@item.LectureId">Theo Dõi Ngay</button>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <button class="btn btn-success btn-follow" data-id="@item.LectureId">Hủy Theo Dõi</button>
+                </td>
+            }
+
+        </tr>
             }
 
         }
@@ -42,7 +69,7 @@
 @section scripts{
   <script>
       $(document).ready(function () {
-          $(".btn").on("click", function () {
+          $(".btn-attendace").on("click", function () {
               var id = $(this).data("id");
               var btn = $(this);
               $.ajax({
@@ -57,6 +84,25 @@
                       } else {
                           alert("Đã Hủy Đăng Ký");
                           btn.removeClass("btn-success").addClass("btn-warning").text("Đăng Ký Ngay");
+                      }
+                  }
+              });
+          })
+          $(".btn-follow").on("click", function () {
+              var id = $(this).data("id");
+              var btn = $(this);
+              $.ajax({
+                  url: "/Course/Follow",
+                  method: "POST",
+                  data: { followee: id },
+                  dataType: "json",
+                  success: function (data) {
+                      if (data == "true") {
+                          alert("Đã Theo Dõi");
+                          btn.removeClass("btn-warning").addClass("btn-success").text("Đã Theo Dõi");
+                      } else {
+                          alert("Đã Hủy Theo Dõi");
+                          btn.removeClass("btn-success").addClass("btn-warning").text("Theo Dõi Ngay");
                       }
                   }
               });
